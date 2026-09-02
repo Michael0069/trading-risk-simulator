@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "AI Trading Simulator",
+    "slug": "ai-trading-simulator-mobile",
+    "scheme": "aitradingsimulator",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "aitradingsimulator",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.decei.aitradingsimulator"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "extra": {
+      "router": {}
+    }
+  }
+}
