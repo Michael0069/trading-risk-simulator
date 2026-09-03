@@ -37,7 +37,7 @@ interface TradeHistoryProps {
 }
 
 export default function TradeHistory({
-  trades,
+  trades = [],
   coachEvents = [],
   startingBalance = 10000,
   currentBalance,
@@ -45,8 +45,9 @@ export default function TradeHistory({
 }: TradeHistoryProps) {
   const [openTradeId, setOpenTradeId] = useState<number | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const safeTrades = Array.isArray(trades) ? trades : [];
 
-  if (trades.length === 0) {
+  if (safeTrades.length === 0) {
     return (
       <div className="rounded-[1.75rem] border border-slate-200/80 bg-white/85 p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-950/70">
         <p className="text-lg text-slate-700 dark:text-slate-300">No trade history</p>
@@ -55,12 +56,12 @@ export default function TradeHistory({
     );
   }
 
-  const winCount = trades.filter((t) => t.pnl > 0).length;
-  const lossCount = trades.filter((t) => t.pnl < 0).length;
-  const winRate = trades.length > 0 ? ((winCount / trades.length) * 100).toFixed(1) : '0';
-  const totalPnL = trades.reduce((sum, t) => sum + t.pnl, 0);
-  const avgPnL = trades.length > 0 ? (totalPnL / trades.length).toFixed(2) : '0';
-  const bestWin = trades.reduce((max, t) => (t.pnl > max ? t.pnl : max), 0);
+  const winCount = safeTrades.filter((t) => t.pnl > 0).length;
+  const lossCount = safeTrades.filter((t) => t.pnl < 0).length;
+  const winRate = safeTrades.length > 0 ? ((winCount / safeTrades.length) * 100).toFixed(1) : '0';
+  const totalPnL = safeTrades.reduce((sum, t) => sum + t.pnl, 0);
+  const avgPnL = safeTrades.length > 0 ? (totalPnL / safeTrades.length).toFixed(2) : '0';
+  const bestWin = safeTrades.reduce((max, t) => (t.pnl > max ? t.pnl : max), 0);
 
   // Clean execution count
   const cleanTrades = trades.filter((t) => {

@@ -7,7 +7,8 @@ interface PortfolioStatsProps {
 
 export default function PortfolioStats({ portfolio, user }: PortfolioStatsProps) {
   const totalPnL = portfolio?.total_pnl || 0;
-  const pnlPercentage = ((totalPnL / user.starting_balance) * 100).toFixed(2);
+  const startingBal = Number(user?.starting_balance) || 10000;
+  const pnlPercentage = ((totalPnL / startingBal) * 100).toFixed(2);
   const pnlPositive = totalPnL >= 0;
 
   return (
@@ -17,7 +18,7 @@ export default function PortfolioStats({ portfolio, user }: PortfolioStatsProps)
         <p className="mt-2 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
           GHS {portfolio?.current_balance?.toFixed(2) || '0.00'}
         </p>
-        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Started: GHS {user.starting_balance?.toFixed(2)}</p>
+        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Started: GHS {startingBal.toFixed(2)}</p>
       </div>
 
       <div className="premium-card animate-stagger-2 rounded-[1.75rem] p-6 transition duration-200 hover:-translate-y-1 hover:shadow-lg dark:bg-slate-950/70 border border-slate-200/80 dark:border-slate-800/80">

@@ -1,11 +1,52 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import TradingDashboard from '@/components/TradingDashboard';
-import { LogOut } from 'lucide-react';
+import { LogOut, RefreshCw } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { clearStoredUser, getStoredUser } from '@/lib/auth';
+
+class DashboardErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('Dashboard boundary caught error:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex min-h-[60vh] flex-col items-center justify-center p-6 text-center">
+          <div className="max-w-md rounded-3xl border border-sky-200/80 bg-white/90 p-8 shadow-xl dark:border-sky-800/80 dark:bg-slate-900/90">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Syncing Trading Engine</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+              Connected to cloud backend. Click below to load live market and portfolio stats.
+            </p>
+            <button
+              onClick={() => {
+                this.setState({ hasError: false });
+                window.location.reload();
+              }}
+              className="inline-flex items-center gap-2 rounded-full bg-sky-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-sky-500 active:scale-95"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Refresh Dashboard
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -91,7 +132,9 @@ export default function DashboardPage() {
         </div>
       </nav>
 
-      <TradingDashboard user={user} />
+      <DashboardErrorBoundary>
+        <TradingDashboard user={user} />
+      </DashboardErrorBoundary>
     </div>
   );
 }

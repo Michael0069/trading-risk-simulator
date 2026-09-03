@@ -18,14 +18,15 @@ interface EquityChartProps {
   currentBalance?: number;
 }
 
-export default function EquityChart({ trades, startingBalance = 10000, currentBalance }: EquityChartProps) {
+export default function EquityChart({ trades = [], startingBalance = 10000, currentBalance }: EquityChartProps) {
   const [viewMode, setViewMode] = useState<'equity' | 'drawdown' | 'combined'>('equity');
   const [rangeFilter, setRangeFilter] = useState<'all' | '10' | '20'>('all');
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   // Sort trades chronologically
   const sortedTrades = useMemo(() => {
-    const copy = [...trades];
+    const list = Array.isArray(trades) ? trades : [];
+    const copy = [...list];
     copy.sort((a, b) => new Date(a.closed_at).getTime() - new Date(b.closed_at).getTime());
     return copy;
   }, [trades]);

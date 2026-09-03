@@ -125,10 +125,10 @@ export default function TradingDashboard({ user }: { user: User }) {
         marketAPI.getAllPrices(),
       ]);
 
-      setPortfolio(portfolioData);
-      setTrades(tradesData);
-      setPositions(positionsData);
-      setMarketPrices(pricesData);
+      setPortfolio(portfolioData && typeof portfolioData === 'object' && !portfolioData.error ? portfolioData : null);
+      setTrades(Array.isArray(tradesData) ? tradesData : []);
+      setPositions(Array.isArray(positionsData) ? positionsData : []);
+      setMarketPrices(pricesData && typeof pricesData === 'object' ? pricesData : {});
     } catch (err) {
       setError('Failed to load portfolio data');
       console.error(err);
@@ -165,8 +165,8 @@ export default function TradingDashboard({ user }: { user: User }) {
         coachAPI.getBrokerDemoConfig(),
       ]);
 
-      setCoachEvents(eventsData);
-      setAnalytics(analyticsData);
+      setCoachEvents(Array.isArray(eventsData) ? eventsData : []);
+      setAnalytics(analyticsData && typeof analyticsData === 'object' && !analyticsData.error ? analyticsData : null);
       setBrokerConfig(brokerData);
     } catch (err) {
       console.error('Failed to load coach data:', err);
