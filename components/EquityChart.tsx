@@ -281,7 +281,7 @@ export default function EquityChart({ trades = [], startingBalance = 10000, curr
       <div className="relative w-full overflow-hidden rounded-2xl border border-slate-200/60 bg-slate-900/5 p-2 dark:border-slate-800/80 dark:bg-slate-950/90">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-auto max-h-[300px] overflow-visible select-none"
+          className="w-full h-auto max-h-75 overflow-visible select-none"
           onMouseLeave={() => setHoverIndex(null)}
         >
           <defs>
