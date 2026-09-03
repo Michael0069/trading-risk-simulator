@@ -1,9 +1,11 @@
-const BACKEND_BASE_URL = process.env.BACKEND_API_URL || 'http://127.0.0.1:8000';
+const RAW_BACKEND = process.env.BACKEND_API_URL || 'https://trading-risk-simulator.onrender.com';
+const BACKEND_BASE_URL = RAW_BACKEND.trim().replace(/\/+$/, '');
 
 async function proxyRequest(request: Request, context: { params: Promise<{ path: string[] }> }) {
   try {
     const { path } = await context.params;
-    const targetUrl = new URL(`${BACKEND_BASE_URL}/${path.join('/')}`);
+    const cleanSubPath = (path || []).join('/').replace(/^\/+/, '');
+    const targetUrl = new URL(`${BACKEND_BASE_URL}/${cleanSubPath}`);
     const requestUrl = new URL(request.url);
     targetUrl.search = requestUrl.search;
 
