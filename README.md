@@ -128,3 +128,4 @@ trading-risk-simulator/
 ## 📄 License
 
 This project was built as a university mini-project (CSC 319).
+
