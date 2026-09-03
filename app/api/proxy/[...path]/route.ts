@@ -24,13 +24,13 @@ async function proxyRequest(request: Request, context: { params: Promise<{ path:
     }
 
     const response = await fetch(targetUrl, init);
-    const responseHeaders = new Headers(response.headers);
-    responseHeaders.delete('content-encoding');
-    responseHeaders.delete('transfer-encoding');
+    const responseText = await response.text();
 
-    return new Response(response.body, {
+    return new Response(responseText, {
       status: response.status,
-      headers: responseHeaders,
+      headers: {
+        'content-type': response.headers.get('content-type') || 'application/json',
+      },
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Proxy request failed';

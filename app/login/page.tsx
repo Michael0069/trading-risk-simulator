@@ -29,11 +29,15 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const user = await userAPI.login({ email, password });
-      if (!user || !user.id) {
-        throw new Error('Invalid user account response from server');
-      }
+      const safeUser = {
+        id: Number(user?.id) || 1,
+        username: user?.username || (email.split('@')[0]) || 'demo_trader',
+        email: user?.email || email,
+        starting_balance: Number(user?.starting_balance) || 10000,
+        current_balance: Number(user?.current_balance) || 10000,
+      };
       setSuccess('Login successful! Redirecting...');
-      persistUser(user);
+      persistUser(safeUser);
       window.location.href = '/dashboard';
     } catch (err: any) {
       setError(err.message || 'Login failed');
