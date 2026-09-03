@@ -19,7 +19,7 @@ export default function RiskGuardian({ balance, riskSettings, onOpenSettings }: 
   const dailyLoss = Number(riskSettings?.daily_loss_limit) || 500;
 
   return (
-    <div className="rounded-[1.75rem] border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm dark:border-slate-800 dark:from-slate-950 dark:to-slate-900/80">
+    <div className="rounded-[1.75rem] border border-slate-200/80 bg-linear-to-br from-white to-slate-50 p-6 shadow-sm dark:border-slate-800 dark:from-slate-950 dark:to-slate-900/80">
       <div className="mb-5 flex items-center justify-between gap-4">
         <h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight text-slate-950 dark:text-white">
           <Shield className="h-5 w-5 text-sky-500" />
@@ -51,7 +51,7 @@ export default function RiskGuardian({ balance, riskSettings, onOpenSettings }: 
           
           <div className="space-y-3 text-sm">
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
               <div>
                 <p className="text-slate-600 dark:text-slate-300">
                   <span className="font-semibold">{maxRiskPct}% Max Risk Rule:</span> Never risk more than {maxRiskPct}% of account per trade
@@ -63,7 +63,7 @@ export default function RiskGuardian({ balance, riskSettings, onOpenSettings }: 
             </div>
 
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
               <div>
                 <p className="text-slate-600 dark:text-slate-300">
                   <span className="font-semibold">Daily Loss Ceiling:</span> Halts entries at GHS {dailyLoss.toFixed(2)} loss
@@ -75,7 +75,7 @@ export default function RiskGuardian({ balance, riskSettings, onOpenSettings }: 
             </div>
 
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
               <div>
                 <p className="text-slate-600 dark:text-slate-300">
                   <span className="font-semibold">1:{minRR.toFixed(1)} R:R Target:</span> Minimum required reward-to-risk ratio
@@ -87,7 +87,7 @@ export default function RiskGuardian({ balance, riskSettings, onOpenSettings }: 
             </div>
 
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
               <div>
                 <p className="text-slate-600 dark:text-slate-300">
                   <span className="font-semibold">Stop Loss Required:</span> Every position must have a stop loss

@@ -162,7 +162,7 @@ export default function RegisterPage() {
             {/* Error Message */}
             {error && (
               <div className="flex gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200">
-                <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
                 {error}
               </div>
             )}
@@ -170,7 +170,7 @@ export default function RegisterPage() {
             {/* Success Message */}
             {success && (
               <div className="flex gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
-                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" />
                 {success}
               </div>
             )}

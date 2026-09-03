@@ -807,9 +807,9 @@ export default function PositionForm({ userId, balance, onPositionOpened, market
                     }`}
                   >
                     {warning.includes('❌') ? (
-                      <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                      <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
                     ) : (
-                      <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                     )}
                     <span className="text-xs">{warning.replace('❌', '').replace('⚠️', '')}</span>
                   </div>
@@ -1029,14 +1029,14 @@ export default function PositionForm({ userId, balance, onPositionOpened, market
         {/* Status Messages */}
         {error && (
           <div className="mb-4 flex gap-2 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200 premium-fade-in">
-            <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+            <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
             {error}
           </div>
         )}
 
         {success && (
           <div className="mb-4 flex gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200 premium-fade-in">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0" />
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
             {success}
           </div>
         )}

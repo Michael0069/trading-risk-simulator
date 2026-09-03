@@ -116,7 +116,7 @@ export default function MarketWatch({ marketPrices, sentiments }: MarketWatchPro
       </div>
 
       <div className="mt-4 flex gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
-        <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
         <span>Prices update every 5 seconds. Sentiment analysis is AI-powered.</span>
       </div>
     </div>
