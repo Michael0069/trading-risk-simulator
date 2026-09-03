@@ -30,16 +30,27 @@ class DashboardErrorBoundary extends React.Component<
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
               Connected to cloud backend. Click below to load live market and portfolio stats.
             </p>
-            <button
-              onClick={() => {
-                this.setState({ hasError: false });
-                window.location.reload();
-              }}
-              className="inline-flex items-center gap-2 rounded-full bg-sky-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-sky-500 active:scale-95"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Refresh Dashboard
-            </button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <button
+                onClick={() => {
+                  this.setState({ hasError: false });
+                  window.location.reload();
+                }}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-sky-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-sky-500 active:scale-95"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Refresh Dashboard
+              </button>
+              <button
+                onClick={() => {
+                  clearStoredUser();
+                  window.location.href = '/login';
+                }}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+              >
+                Re-login
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -55,19 +66,20 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const storedUser = getStoredUser();
-    if (!storedUser) {
+    if (!storedUser || !storedUser.id) {
+      clearStoredUser();
       router.push('/login');
       return;
     }
 
-    try {
-      setUser(storedUser);
-    } catch {
-      clearStoredUser();
-      router.push('/login');
-    } finally {
-      setLoading(false);
-    }
+    setUser({
+      id: Number(storedUser.id) || 1,
+      username: storedUser.username || 'demo_trader',
+      email: storedUser.email || 'demo@example.com',
+      starting_balance: Number(storedUser.starting_balance) || 10000,
+      current_balance: Number(storedUser.current_balance) || 10000,
+    });
+    setLoading(false);
   }, [router]);
 
   const handleLogout = () => {

@@ -44,7 +44,15 @@ export function persistUser(user: StoredUser) {
     return;
   }
 
-  const serialized = JSON.stringify(user);
+  const safeUser: StoredUser = {
+    id: Number(user.id) || 1,
+    username: user.username || 'demo_trader',
+    email: user.email || 'demo@example.com',
+    current_balance: Number(user.current_balance) || 10000,
+    starting_balance: Number(user.starting_balance) || 10000,
+  };
+
+  const serialized = JSON.stringify(safeUser);
   localStorage.setItem(USER_STORAGE_KEY, serialized);
   sessionStorage.setItem(USER_STORAGE_KEY, serialized);
   writeCookie(serialized);
@@ -62,7 +70,18 @@ export function getStoredUser(): StoredUser | null {
   }
 
   try {
-    return JSON.parse(storedValue) as StoredUser;
+    const parsed = JSON.parse(storedValue);
+    if (!parsed || typeof parsed !== 'object' || !parsed.id) {
+      clearStoredUser();
+      return null;
+    }
+    return {
+      id: Number(parsed.id) || 1,
+      username: parsed.username || 'demo_trader',
+      email: parsed.email || 'demo@example.com',
+      current_balance: Number(parsed.current_balance) || 10000,
+      starting_balance: Number(parsed.starting_balance) || 10000,
+    };
   } catch {
     clearStoredUser();
     return null;

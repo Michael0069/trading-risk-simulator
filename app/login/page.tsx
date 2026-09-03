@@ -29,9 +29,12 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const user = await userAPI.login({ email, password });
+      if (!user || !user.id) {
+        throw new Error('Invalid user account response from server');
+      }
       setSuccess('Login successful! Redirecting...');
       persistUser(user);
-      router.replace('/dashboard');
+      window.location.href = '/dashboard';
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {

@@ -94,16 +94,18 @@ export default function RiskSettingsModal({
   };
 
   const handleResetDefaults = () => {
+    const bal = Number(currentBalance) || 10000;
     setMaxRiskPct(2.0);
     setMaxTradesPerDay(5);
-    setDailyLossLimit(Math.round(currentBalance * 0.05));
+    setDailyLossLimit(Math.round(bal * 0.05));
     setMinRiskReward(1.5);
     setCustomStrategy('General Trend & Risk Guardian');
   };
 
   if (!isOpen) return null;
 
-  const maxRiskAmount = (currentBalance * (maxRiskPct / 100)).toFixed(2);
+  const safeCurrentBal = Number(currentBalance) || 10000;
+  const maxRiskAmount = (safeCurrentBal * (maxRiskPct / 100)).toFixed(2);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">

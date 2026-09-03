@@ -80,6 +80,10 @@ interface CoachEvent {
 }
 
 export default function TradingDashboard({ user }: { user: User }) {
+  const currentUserId = Number(user?.id) || 1;
+  const safeStartingBalance = Number(user?.starting_balance) || 10000;
+  const safeCurrentBalance = Number(user?.current_balance) || safeStartingBalance;
+
   const [activeTab, setActiveTab] = useState('dashboard');
   const [portfolio, setPortfolio] = useState<PortfolioData | null>(null);
   const [trades, setTrades] = useState<TradeRecord[]>([]);
@@ -106,22 +110,22 @@ export default function TradingDashboard({ user }: { user: User }) {
 
   const loadRiskSettings = useCallback(async () => {
     try {
-      const data = await userAPI.getRiskSettings(user.id);
+      const data = await userAPI.getRiskSettings(currentUserId);
       if (data) {
         setRiskSettings(data);
       }
     } catch (err) {
       console.error('Failed to load risk settings:', err);
     }
-  }, [user.id]);
+  }, [currentUserId]);
 
   const loadPortfolioData = useCallback(async () => {
     try {
       setLoading(true);
       const [portfolioData, tradesData, positionsData, pricesData] = await Promise.all([
-        portfolioAPI.getPortfolio(user.id),
-        portfolioAPI.getTrades(user.id),
-        positionAPI.getPositions(user.id),
+        portfolioAPI.getPortfolio(currentUserId),
+        portfolioAPI.getTrades(currentUserId),
+        positionAPI.getPositions(currentUserId),
         marketAPI.getAllPrices(),
       ]);
 
@@ -135,7 +139,7 @@ export default function TradingDashboard({ user }: { user: User }) {
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, [currentUserId]);
 
   const loadSentiments = useCallback(async () => {
     try {
@@ -160,8 +164,8 @@ export default function TradingDashboard({ user }: { user: User }) {
   const loadCoachData = useCallback(async () => {
     try {
       const [eventsData, analyticsData, brokerData] = await Promise.all([
-        coachAPI.getEvents(user.id),
-        coachAPI.getAnalytics(user.id),
+        coachAPI.getEvents(currentUserId),
+        coachAPI.getAnalytics(currentUserId),
         coachAPI.getBrokerDemoConfig(),
       ]);
 
@@ -171,7 +175,7 @@ export default function TradingDashboard({ user }: { user: User }) {
     } catch (err) {
       console.error('Failed to load coach data:', err);
     }
-  }, [user.id]);
+  }, [currentUserId]);
 
   const updateMarketData = async () => {
     try {
@@ -195,7 +199,7 @@ export default function TradingDashboard({ user }: { user: User }) {
     // Update market data every 5 seconds
     const interval = setInterval(updateMarketData, 5000);
     return () => clearInterval(interval);
-  }, [user.id, loadCoachData, loadPortfolioData, loadSentiments, loadRiskSettings]);
+  }, [currentUserId, loadCoachData, loadPortfolioData, loadSentiments, loadRiskSettings]);
 
   const handlePositionOpened = async () => {
     setPrefillTrade(null);
@@ -396,14 +400,14 @@ export default function TradingDashboard({ user }: { user: User }) {
               {/* Interactive Equity & Drawdown Curve */}
               <EquityChart
                 trades={trades}
-                startingBalance={user.starting_balance || 10000}
-                currentBalance={portfolio?.current_balance || user.current_balance}
+                startingBalance={safeStartingBalance}
+                currentBalance={portfolio?.current_balance || safeCurrentBalance}
               />
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <MarketWatch marketPrices={marketPrices} sentiments={sentiments} />
                 <RiskGuardian 
-                  balance={portfolio?.current_balance || user.current_balance}
+                  balance={portfolio?.current_balance || safeCurrentBalance}
                   riskSettings={riskSettings}
                   onOpenSettings={() => setShowRiskSettingsModal(true)}
                 />
@@ -463,8 +467,8 @@ export default function TradingDashboard({ user }: { user: User }) {
           {activeTab === 'trade' && (
             <div className="animate-stagger-1">
               <PositionForm 
-                userId={user.id}
-                balance={portfolio?.current_balance || user.current_balance}
+                userId={currentUserId}
+                balance={portfolio?.current_balance || safeCurrentBalance}
                 onPositionOpened={handlePositionOpened}
                 marketPrices={marketPrices}
                 prefillData={prefillTrade}
@@ -488,9 +492,9 @@ export default function TradingDashboard({ user }: { user: User }) {
                 trades={trades}
                 coachEvents={coachEvents}
                 analytics={analytics}
-                startingBalance={user.starting_balance || 10000}
-                currentBalance={portfolio?.current_balance}
-                username={user.username}
+                startingBalance={safeStartingBalance}
+                currentBalance={portfolio?.current_balance || safeCurrentBalance}
+                username={user?.username || 'Demo Trader'}
               />
             </div>
           )}
@@ -822,8 +826,8 @@ export default function TradingDashboard({ user }: { user: User }) {
       <RiskSettingsModal
         isOpen={showRiskSettingsModal}
         onClose={() => setShowRiskSettingsModal(false)}
-        userId={user.id}
-        currentBalance={portfolio?.current_balance || user.current_balance}
+        userId={currentUserId}
+        currentBalance={portfolio?.current_balance || safeCurrentBalance}
         onSaved={(newSettings) => setRiskSettings(newSettings)}
       />
     </div>

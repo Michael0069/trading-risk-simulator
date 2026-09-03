@@ -19,6 +19,7 @@ interface EquityChartProps {
 }
 
 export default function EquityChart({ trades = [], startingBalance = 10000, currentBalance }: EquityChartProps) {
+  const safeStarting = Number(startingBalance) || 10000;
   const [viewMode, setViewMode] = useState<'equity' | 'drawdown' | 'combined'>('equity');
   const [rangeFilter, setRangeFilter] = useState<'all' | '10' | '20'>('all');
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
@@ -40,8 +41,8 @@ export default function EquityChart({ trades = [], startingBalance = 10000, curr
 
   // Compute equity and drawdown trajectory checkpoints
   const trajectory = useMemo(() => {
-    let runningBalance = startingBalance;
-    let peak = startingBalance;
+    let runningBalance = safeStarting;
+    let peak = safeStarting;
     let maxDrawdownAbs = 0;
     let maxDrawdownPct = 0;
 
@@ -52,8 +53,8 @@ export default function EquityChart({ trades = [], startingBalance = 10000, curr
         instrument: 'Initial Capital',
         side: '',
         pnl: 0,
-        balance: startingBalance,
-        peak: startingBalance,
+        balance: safeStarting,
+        peak: safeStarting,
         drawdownAbs: 0,
         drawdownPct: 0,
         closed_at: sortedTrades[0]?.closed_at || new Date().toISOString(),
@@ -86,8 +87,8 @@ export default function EquityChart({ trades = [], startingBalance = 10000, curr
     });
 
     const latest = points[points.length - 1];
-    const totalGain = latest.balance - startingBalance;
-    const totalGainPct = startingBalance > 0 ? (totalGain / startingBalance) * 100 : 0;
+    const totalGain = latest.balance - safeStarting;
+    const totalGainPct = safeStarting > 0 ? (totalGain / safeStarting) * 100 : 0;
 
     // Profit Factor
     const grossProfit = filteredTrades.filter((t) => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
@@ -105,7 +106,7 @@ export default function EquityChart({ trades = [], startingBalance = 10000, curr
       totalGainPct,
       profitFactor,
     };
-  }, [filteredTrades, startingBalance, sortedTrades]);
+  }, [filteredTrades, safeStarting, sortedTrades]);
 
   const { points, peak, maxDrawdownPct, currentDrawdownPct, currentBalance: effBalance, totalGain, totalGainPct, profitFactor } = trajectory;
 
@@ -116,8 +117,8 @@ export default function EquityChart({ trades = [], startingBalance = 10000, curr
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
 
-  const minBalance = Math.min(...points.map((p) => p.balance), startingBalance * 0.98);
-  const maxBalance = Math.max(...points.map((p) => p.balance), startingBalance * 1.02);
+  const minBalance = Math.min(...points.map((p) => p.balance), safeStarting * 0.98);
+  const maxBalance = Math.max(...points.map((p) => p.balance), safeStarting * 1.02);
   const balanceRange = Math.max(maxBalance - minBalance, 1);
 
   const maxDDPctScaled = Math.max(...points.map((p) => p.drawdownPct), 5);

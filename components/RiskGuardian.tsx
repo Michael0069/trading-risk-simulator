@@ -10,12 +10,13 @@ interface RiskGuardianProps {
 }
 
 export default function RiskGuardian({ balance, riskSettings, onOpenSettings }: RiskGuardianProps) {
-  const maxRiskPct = riskSettings?.max_risk_pct ?? 2.0;
-  const maxRiskPerTrade = balance * (maxRiskPct / 100);
-  const recommendedRiskAmount = balance * Math.min(0.01, maxRiskPct / 200);
-  const minRR = riskSettings?.min_risk_reward ?? 1.5;
-  const maxTrades = riskSettings?.max_trades_per_day ?? 5;
-  const dailyLoss = riskSettings?.daily_loss_limit ?? 500;
+  const safeBal = Number(balance) || 10000;
+  const maxRiskPct = Number(riskSettings?.max_risk_pct) || 2.0;
+  const maxRiskPerTrade = safeBal * (maxRiskPct / 100);
+  const recommendedRiskAmount = safeBal * Math.min(0.01, maxRiskPct / 200);
+  const minRR = Number(riskSettings?.min_risk_reward) || 1.5;
+  const maxTrades = Number(riskSettings?.max_trades_per_day) || 5;
+  const dailyLoss = Number(riskSettings?.daily_loss_limit) || 500;
 
   return (
     <div className="rounded-[1.75rem] border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm dark:border-slate-800 dark:from-slate-950 dark:to-slate-900/80">
@@ -133,7 +134,7 @@ export default function RiskGuardian({ balance, riskSettings, onOpenSettings }: 
         {/* Current Account Status */}
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-500/30 dark:bg-emerald-500/10">
           <p className="text-sm text-slate-500 dark:text-slate-400">Current Account Balance</p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">GHS {balance.toFixed(2)}</p>
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">GHS {safeBal.toFixed(2)}</p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
             <div>
               <p className="text-slate-500 dark:text-slate-400">Safe Risk/Trade</p>
